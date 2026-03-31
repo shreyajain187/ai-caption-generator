@@ -26,7 +26,7 @@ An AI-powered web app that generates captions for uploaded videos using OpenAI W
 git clone https://github.com/YOUR_USERNAME/ai-caption-generator.git
 cd ai-caption-generator
 
-
+```
 ### 🔹 2. Install Python (if not installed)
 
 Download from: https://www.python.org/downloads/
