@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ffmpeg -version
 ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ```bash
 python app.py
@@ -63,7 +63,7 @@ Then open your browser and go to:
 ```
 http://127.0.0.1:5000
 ```
-## 📁 Project Structure
+## Project Structure
 
 ```
 ai-caption-generator/
