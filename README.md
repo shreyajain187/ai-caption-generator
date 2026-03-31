@@ -82,7 +82,7 @@ ai-caption-generator/
 ├── uploads/
 ```
 
-## 👩‍💻 Author
+## Author
 
 **Shreya Jain**
 
