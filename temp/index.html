@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Caption Generator</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #38bdf8;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 60%;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;   /* ✅ STACK ELEMENTS */
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .drop-zone {
+            border: 2px dashed #38bdf8;
+            padding: 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 80%;
+            transition: 0.3s;
+        }
+
+        .drop-zone:hover {
+            background: rgba(56,189,248,0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            background: #38bdf8;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .progress {
+            min-height: 24px;
+            color: #facc15;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🎥 AI Caption Generator</h1>
+
+<div class="container">
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <!-- ❌ Removed "for=file" to fix double popup -->
+        <div class="drop-zone" id="dropZone">
+            Click or Drag & Drop Video
+        </div>
+
+        <input type="file" id="file" name="video" required>
+
+        <!-- ✅ Now button is BELOW -->
+        <button type="submit">Generate Captions</button>
+
+    </form>
+
+    <div class="progress" id="progress"></div>
+
+    {% if video %}
+        <video controls>
+            <source src="{{ url_for('uploaded_file', filename=video) }}">
+            
+            <track 
+                src="{{ url_for('output_file', filename=subtitles) }}"
+                kind="subtitles"
+                srclang="en"
+                label="English"
+                default>
+        </video>
+
+        <a href="{{ url_for('output_file', filename=subtitles) }}" download>
+            <button>Download Subtitles</button>
+        </a>
+    {% endif %}
+
+</div>
+
+<script>
+    const fileInput = document.getElementById("file");
+    const dropZone = document.getElementById("dropZone");
+
+    // ✅ Only ONE click trigger now
+    dropZone.onclick = () => fileInput.click();
+
+    dropZone.ondragover = (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = "#facc15";
+    };
+
+    dropZone.ondrop = (e) => {
+        e.preventDefault();
+        fileInput.files = e.dataTransfer.files;
+        dropZone.innerText = fileInput.files[0].name;
+        dropZone.style.borderColor = "#38bdf8";
+    };
+
+    fileInput.onchange = () => {
+        dropZone.innerText = fileInput.files[0].name;
+    };
+
+    // Progress updates
+    setInterval(async () => {
+        try {
+            const res = await fetch("/progress");
+            const data = await res.json();
+            document.getElementById("progress").innerText = data.status;
+        } catch {}
+    }, 1000);
+</script>
+
+</body>
+</html>
